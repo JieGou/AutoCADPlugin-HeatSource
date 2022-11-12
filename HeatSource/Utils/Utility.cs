@@ -15,16 +15,13 @@ using System.Globalization;
 
 namespace HeatSource.Utils
 {
-    class Utility
+    internal class Utility
     {
-
         public enum TypeofLine
         {
             StraghtLine = 0,
             ImaginaryLine = 1,
         };
-
-
 
         // 创建直线
         // <param name="p1"></param>
@@ -62,7 +59,6 @@ namespace HeatSource.Utils
                         ltId = ltt.Add(ltr);
                         trans.AddNewlyCreatedDBObject(ltr, true);
                     }
-
                 }
 
                 Line l = new Line((Point3d)p1, (Point3d)p2);
@@ -81,7 +77,6 @@ namespace HeatSource.Utils
             catch (System.Exception ex)
             {
                 ed.WriteMessage("Problem:" + ex.Message);
-
             }
             finally
             {
@@ -120,7 +115,6 @@ namespace HeatSource.Utils
                     trans.Commit();
                     trans.Dispose();
                 }
-
             }
             return ltId;
         }
@@ -154,7 +148,6 @@ namespace HeatSource.Utils
             return groupId;
         }
 
-
         //str = "(d1, d2, d3)"
         public static Point3d ParsePoint3d(string str)
         {
@@ -170,7 +163,6 @@ namespace HeatSource.Utils
             return p;
         }
 
-
         // show all attributes of group object
         // just for debug
         // <param name="groupId">group id of object</param>
@@ -181,12 +173,12 @@ namespace HeatSource.Utils
             try
             {
                 Group ent = (Group)trans.GetObject(groupId, OpenMode.ForRead);
-                // test the IsNull property of the ExtensionDictionary of the ent. 
+                // test the IsNull property of the ExtensionDictionary of the ent.
                 if (ent.ExtensionDictionary.IsNull)
                 {
                     return;
                 }
-                // variable as DBDictionary. 
+                // variable as DBDictionary.
                 DBDictionary extensionDict = (DBDictionary)trans.GetObject(ent.ExtensionDictionary, OpenMode.ForRead);
                 DBObject dbObj;
                 foreach (System.Collections.DictionaryEntry dEntry in extensionDict)
@@ -194,7 +186,6 @@ namespace HeatSource.Utils
                     dbObj = (DBObject)trans.GetObject((ObjectId)dEntry.Value, OpenMode.ForRead, false);
                     if (dbObj is DBDictionary)
                     {
-
                     }
                     else if (dbObj is Xrecord)
                     {
@@ -239,31 +230,30 @@ namespace HeatSource.Utils
                     Xrecord myXrecord;
                     if (extensionDict.Contains(key))
                     {
-                        // Check to see if the entry we are going to add is already there. 
+                        // Check to see if the entry we are going to add is already there.
                         ObjectId entryId = extensionDict.GetAt(key);
-                        // Extract the Xrecord. Declare an Xrecord variable. 
+                        // Extract the Xrecord. Declare an Xrecord variable.
                         myXrecord = default(Xrecord);
                         extensionDict.UpgradeOpen();
-                        // Instantiate the Xrecord variable 
+                        // Instantiate the Xrecord variable
                         myXrecord = (Xrecord)trans.GetObject(entryId, OpenMode.ForWrite);
                         ResultBuffer data = new ResultBuffer(new TypedValue((int)DxfCode.Text, value));
                         myXrecord.Data = data;
-
                     }
                     else
                     {
-                        // If the code gets to here then the data entry does not exist 
+                        // If the code gets to here then the data entry does not exist
                         // upgrade the ExtensionDictionary created in step 5 to write
                         extensionDict.UpgradeOpen();
-                        //  Create a new XRecord. 
+                        //  Create a new XRecord.
                         myXrecord = new Xrecord();
-                        // Create the resbuf list. 
+                        // Create the resbuf list.
                         ResultBuffer data = new ResultBuffer(new TypedValue((int)DxfCode.Text, value));
-                        // Add the ResultBuffer to the Xrecord 
+                        // Add the ResultBuffer to the Xrecord
                         myXrecord.Data = data;
-                        // Create the entry in the ExtensionDictionary. 
+                        // Create the entry in the ExtensionDictionary.
                         extensionDict.SetAt(key, myXrecord);
-                        // Tell the transaction about the newly created Xrecord 
+                        // Tell the transaction about the newly created Xrecord
                         trans.AddNewlyCreatedDBObject(myXrecord, true);
                     }
                 }
@@ -271,7 +261,7 @@ namespace HeatSource.Utils
             }
             catch (System.Exception ex)
             {
-                // a problem occured, lets print it 
+                // a problem occured, lets print it
                 ed.WriteMessage("a problem occured because " + ex.Message);
             }
             finally
@@ -295,6 +285,7 @@ namespace HeatSource.Utils
                 }
             }
         }
+
         public static ObjectId CreateLayer(String name)
         {
             using (DocumentLock docLock = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.LockDocument())
@@ -348,20 +339,15 @@ namespace HeatSource.Utils
                             {
                                 return layerId;
                             }
-
                         }
-
                     }
-
                 }
                 return ObjectId.Null;
-
             }
-
         }
 
         /// <summary>
-        /// 
+        ///
         ///
         /// </summary>
         /// <param name="layerId">图层的ObjectID</param>
@@ -402,7 +388,6 @@ namespace HeatSource.Utils
                     tr.Dispose();
                 }
             }
-
         }
 
         public static void ActiveOriginLayer()
@@ -438,7 +423,6 @@ namespace HeatSource.Utils
                     ed.WriteMessage(e.Message);
                 }
             }
-
         }
 
         public static void ResetCLayer(ObjectId layerId)
@@ -475,7 +459,6 @@ namespace HeatSource.Utils
                     tr.Dispose();
                 }
             }
-
         }
 
         public static void LoadMlineStyle()
@@ -490,7 +473,6 @@ namespace HeatSource.Utils
 #endif
             try
             {
-
                 object acadObject = Application.AcadApplication;
 
                 object preferences =
@@ -531,7 +513,6 @@ namespace HeatSource.Utils
             {
                 ed.WriteMessage(e.Message);
             }
-
         }
 
         public static void TestPoint(Point3d p)
@@ -551,12 +532,10 @@ namespace HeatSource.Utils
 
         public static bool PointInPolygon(Point3d p, Polyline pline)
         {
-
             int i, j = pline.NumberOfVertices - 2;
             bool oddNodes = false;
             double x = p.X;
             double y = p.Y;
-
 
             for (i = 0; i < pline.NumberOfVertices - 1; i++)
             {
@@ -575,8 +554,6 @@ namespace HeatSource.Utils
             return oddNodes;
         }
 
-
-
         public static Point2d Point3DTo2D(Point3d p)
         {
             return new Point2d(p.X, p.Y);
@@ -594,6 +571,7 @@ namespace HeatSource.Utils
             }
             return false;
         }
+
         /// <summary>
         /// 判断点在线段上
         /// </summary>
@@ -616,7 +594,6 @@ namespace HeatSource.Utils
 
         public static bool SegmentsIntr(Point3d a, Point3d b, Point3d c, Point3d d, out Point3d res)
         {
-
             res = new Point3d();
             // 三角形abc 面积的2倍
             var area_abc = (a.X - c.X) * (b.Y - c.Y) - (a.Y - c.Y) * (b.X - c.X);
@@ -684,8 +661,9 @@ namespace HeatSource.Utils
             }
         }
 
-        static int currentColorIndex = -1;
-        static List<Color> colors = new List<Autodesk.AutoCAD.Colors.Color>(){
+        private static int currentColorIndex = -1;
+
+        private static List<Color> colors = new List<Autodesk.AutoCAD.Colors.Color>(){
                 Color.FromRgb(255, 0, 0),
                 Color.FromRgb(255, 125, 0),
                 Color.FromRgb(255, 255, 0),
@@ -770,7 +748,10 @@ namespace HeatSource.Utils
             }
         }
 
-        // Get the acad.exe location for the AutoCAD current version
+        /// <summary>
+        /// Get the acad.exe location for the AutoCAD current version
+        /// </summary>
+        /// <returns></returns>
         public static string GetAcadLocation()
         {
             RegistryKey rklm = Registry.LocalMachine;
@@ -820,7 +801,6 @@ namespace HeatSource.Utils
                 newTransaction.Commit();
                 return newTextStyleTable["HEATSOURCE"];
             }
-
         }
 
         public static void ImportBlocks()
@@ -835,7 +815,7 @@ namespace HeatSource.Utils
                 {
                     // Read the DWG into a side database
 #if DEBUG
-                sourceDb.ReadDwgFile("../../88.dwg", System.IO.FileShare.Read, true,"");
+                    sourceDb.ReadDwgFile("../../88.dwg", System.IO.FileShare.Read, true, "");
 #else
                     sourceDb.ReadDwgFile("./Resource/88.dwg", System.IO.FileShare.Read, true, "");
 #endif
@@ -954,7 +934,7 @@ namespace HeatSource.Utils
                             rasterImageDef.Load();
                             rasterImageDef.ImageModified = true;
                             rasterImageDef.ResolutionUnits = Unit.Millimeter;
-              
+
                             tm.AddNewlyCreatedDBObject(rasterImageDef, true);
                         }
                         RasterImage rasterImage = new RasterImage();
@@ -982,11 +962,9 @@ namespace HeatSource.Utils
                     {
                         System.Windows.Forms.MessageBox.Show(e.ToString());
                     }
-
                 }
             }
             return val;
-            
         }
 
         public static ObjectId GetObjectId(string handle)
@@ -996,7 +974,7 @@ namespace HeatSource.Utils
                 ObjectId newObjectId = Application.DocumentManager.MdiActiveDocument.Database.GetObjectId(false, new Handle(Convert.ToInt64(handle, 16)), 0);
                 return newObjectId;
             }
-            catch(System.Exception e)
+            catch (System.Exception e)
             {
                 Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage(e.Message);
             }

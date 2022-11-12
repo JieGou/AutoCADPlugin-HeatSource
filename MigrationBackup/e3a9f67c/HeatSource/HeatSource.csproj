@@ -1,0 +1,336 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{81FB7737-25FC-41F9-A90A-8455398BEFD8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HeatSourceKeyGenerator</RootNamespace>
+    <AssemblyName>HeatSourceKeyGenerator</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AcCoreMgd">
+      <HintPath>C:\ObjectARX 2016\inc\AcCoreMgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcCui">
+      <HintPath>C:\ObjectARX 2016\inc\AcCui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcDbMgd">
+      <HintPath>C:\ObjectARX 2016\inc\AcDbMgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcMgd">
+      <HintPath>C:\ObjectARX 2016\inc\AcMgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcWindows">
+      <HintPath>C:\ObjectARX 2016\inc\AcWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AdWindows">
+      <HintPath>C:\ObjectARX 2016\inc\AdWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Formula\AnnualHeatConsumption.cs" />
+    <Compile Include="Formula\AnnualTotalCost.cs" />
+    <Compile Include="Formula\Formula.cs" />
+    <Compile Include="Formula\GasHeatingCost.cs" />
+    <Compile Include="Formula\HeatingDesignLoad.cs" />
+    <Compile Include="Formula\IndirctHeatingConsumption.cs" />
+    <Compile Include="Formula\OuterHeating.cs" />
+    <Compile Include="Formula\OuterNetCoolCost.cs" />
+    <Compile Include="Formula\WaterPumpEnergyConsumption.cs" />
+    <Compile Include="Formula\WaterPumpFlow.cs" />
+    <Compile Include="Formula\WaterPumpHead.cs" />
+    <Compile Include="Formula\WaterPumpOperationCost.cs" />
+    <Compile Include="Formula\WaterPumpPower.cs" />
+    <Compile Include="GlobalProperty.cs" />
+    <Compile Include="HeatSource.cs" />
+    <Compile Include="Model\BaseModel.cs" />
+    <Compile Include="Model\Building.cs" />
+    <Compile Include="Model\District.cs" />
+    <Compile Include="Model\HeatProducer.cs" />
+    <Compile Include="Model\PipeJoint.cs" />
+    <Compile Include="Model\PipeLine.cs" />
+    <Compile Include="Model\Solution.cs" />
+    <Compile Include="Model\SubStation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Utils\ChineseNum.cs" />
+    <Compile Include="Utils\CommandManager.cs" />
+    <Compile Include="Utils\DataConfig.cs" />
+    <Compile Include="Utils\Error.cs" />
+    <Compile Include="Utils\ExcelUtil.cs" />
+    <Compile Include="Utils\Logging.cs" />
+    <Compile Include="Utils\ModelIdManager.cs" />
+    <Compile Include="Utils\PipeJig.cs" />
+    <Compile Include="Utils\PLine.cs" />
+    <Compile Include="Utils\PolyLineJig.cs" />
+    <Compile Include="Utils\RectJig.cs" />
+    <Compile Include="Utils\ScreenshotUtil.cs" />
+    <Compile Include="Utils\Utility.cs" />
+    <Compile Include="Utils\WordUtil.cs" />
+    <Compile Include="View\BaseAttrEditor.xaml.cs">
+      <DependentUpon>BaseAttrEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\BuildingAttrEditor.xaml.cs">
+      <DependentUpon>BuildingAttrEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Constants.cs" />
+    <Compile Include="View\CropMessage.xaml.cs">
+      <DependentUpon>CropMessage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\HeatProducerAttrEditor.xaml.cs">
+      <DependentUpon>HeatProducerAttrEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProgressBarFunc.xaml.cs">
+      <DependentUpon>ProgressBarFunc.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SolutionAtrrBean\AttrInfo.cs" />
+    <Compile Include="View\SolutionAtrrBean\BaseInfo.cs" />
+    <Compile Include="View\SolutionAtrrBean\BuildingInfo.cs" />
+    <Compile Include="View\SolutionAtrrBean\CustomAttrCollection.cs" />
+    <Compile Include="View\SolutionAtrrBean\CustomAttrCollectionDescriptor.cs" />
+    <Compile Include="View\SolutionAtrrBean\HeatproducerDeviceInfo.cs" />
+    <Compile Include="View\SolutionAtrrBean\HeatProducerInfo.cs" />
+    <Compile Include="View\SolutionAtrrBean\SolutionAttrCompareTable.cs" />
+    <Compile Include="View\SolutionAtrrBean\SolutionAttrTable.cs" />
+    <Compile Include="View\SolutionAtrrBean\SolutionDeviceInfo.cs" />
+    <Compile Include="View\SolutionAtrrBean\SolutionInfo.cs" />
+    <Compile Include="View\SolutionAtrrBean\SubstationInfo.cs" />
+    <Compile Include="View\SolutionAtrrBean\TotoalInfo.cs" />
+    <Compile Include="View\SolutionAtrrBean\TypeConvertors.cs" />
+    <Compile Include="View\SolutionAttrComparePanel.xaml.cs">
+      <DependentUpon>SolutionAttrComparePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SolutionAttrPanel.xaml.cs">
+      <DependentUpon>SolutionAttrPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SolutionPanel.xaml.cs">
+      <DependentUpon>SolutionPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SubstationAttrEditor.xaml.cs">
+      <DependentUpon>SubstationAttrEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ToolPanel.xaml.cs">
+      <DependentUpon>ToolPanel.xaml</DependentUpon>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数1400kw_台数1_直接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数1400kw_台数1_间接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数1400kw_台数2_直接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数1400kw_台数2_间接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数2100kw_台数1_直接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数2100kw_台数1_间接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数2100kw_台数3_直接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数2800kw_台数1_直接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数2800kw_台数1_间接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数2800kw_台数2_直接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数2800kw_台数2_间接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数4200kw_台数2_间接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数4200kw_台数3_直接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数4200kw_台数3_间接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数4900kw_台数2_间接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数5600kw_台数2_直接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数5600kw_台数2_间接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数6300kw_台数3_直接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数6300kw_台数3_间接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数700kw_台数1_直接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数700kw_台数1_间接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数8400kw_台数3_直接_编号1.xlsx" />
+    <None Include="Excels\热源选型软件设备参数表\总吨数8400kw_台数3_间接_编号1.xlsx" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <None Include="Resource\endPart.docx" />
+    <None Include="Resource\heatPart.docx" />
+    <None Include="Resource\highlight.mln" />
+    <None Include="Resource\highlightw.mln" />
+    <None Include="Resource\mlinejig.mln" />
+    <None Include="Resource\mlinejigw.mln" />
+    <None Include="Resource\pipeline.mln" />
+    <None Include="Resource\pipelinew.mln" />
+    <None Include="Resource\startPart.docx" />
+    <None Include="Resource\Template.docx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Config\attribute_label_list.txt" />
+    <Resource Include="Config\city_list.txt" />
+    <Resource Include="Config\Custom_data.xml" />
+    <Resource Include="Config\GB50736_2012.xml" />
+    <Resource Include="Excels\城市列表及相关热指标数据表\严寒地区.xml" />
+    <Resource Include="Excels\城市列表及相关热指标数据表\城市列表.xml" />
+    <Resource Include="Excels\城市列表及相关热指标数据表\夏热冬冷地区.xml" />
+    <Resource Include="Excels\城市列表及相关热指标数据表\寒冷地区.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数1400kw_台数1_直接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数1400kw_台数1_间接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数1400kw_台数2_直接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数1400kw_台数2_间接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数2100kw_台数1_直接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数2100kw_台数1_间接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数2100kw_台数3_直接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数2800kw_台数1_直接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数2800kw_台数1_间接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数2800kw_台数2_直接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数2800kw_台数2_间接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数4200kw_台数2_间接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数4200kw_台数3_直接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数4200kw_台数3_间接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数4900kw_台数2_间接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数5600kw_台数2_直接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数5600kw_台数2_间接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数6300kw_台数3_直接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数6300kw_台数3_间接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数700kw_台数1_直接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数700kw_台数1_间接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数8400kw_台数3_直接_编号1.xml" />
+    <Resource Include="Excels\热源选型软件设备参数表\总吨数8400kw_台数3_间接_编号1.xml" />
+    <Resource Include="img\addSource.png" />
+    <Resource Include="img\addSource_select.png" />
+    <Resource Include="img\addStation.png" />
+    <Resource Include="img\addStation_select.png" />
+    <Resource Include="img\ajustProp.png" />
+    <Resource Include="img\ajustProp_select.png" />
+    <Resource Include="img\baseProperty.png" />
+    <Resource Include="img\baseProperty_select.png" />
+    <Resource Include="img\circleSelect.png" />
+    <Resource Include="img\circleSelect_select.png" />
+    <Resource Include="img\connectHB.png" />
+    <Resource Include="img\connectHB_select.png" />
+    <Resource Include="img\connectHS.png" />
+    <Resource Include="img\connectHS_select.png" />
+    <Resource Include="img\connectSB.png" />
+    <Resource Include="img\connectSB_select.png" />
+    <Resource Include="img\drawBuilding.png" />
+    <Resource Include="img\drawBuilding_select.png" />
+    <Resource Include="img\drawPipline.png" />
+    <Resource Include="img\drawPiplineBuilding.png" />
+    <Resource Include="img\drawPiplineBuilding_select.png" />
+    <Resource Include="img\drawPipline_select.png" />
+    <Resource Include="img\drawRec.png" />
+    <Resource Include="img\drawRec_select.png" />
+    <Resource Include="img\generateIntro.png" />
+    <Resource Include="img\generateIntro_select.png" />
+    <Resource Include="img\importImage.png" />
+    <Resource Include="img\importimage_select.png" />
+    <Resource Include="img\left-arrow.png" />
+    <Resource Include="img\right-arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Simple Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\BaseAttrEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\BuildingAttrEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\CropMessage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\HeatProducerAttrEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ProgressBarFunc.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SolutionAttrComparePanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SolutionAttrPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SolutionPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SubstationAttrEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ToolPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChromeTabs\ChromeTabs.csproj">
+      <Project>{0208352a-d75a-44b1-9c21-aa54d64d24b6}</Project>
+      <Name>ChromeTabs</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

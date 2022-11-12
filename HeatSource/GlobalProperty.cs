@@ -11,10 +11,12 @@ using HeatSource.View;
 namespace HeatSource
 {
     //global property 的属性绑定到outlinelayer上
-    public class GlobalProperty:BaseModel
+    public class GlobalProperty : BaseModel
     {
         #region UI Control
+
         private double buildingOutlineWidth = 10;
+
         public double BuildingOutlineWidth
         {
             get
@@ -27,7 +29,9 @@ namespace HeatSource
                 this.Save();
             }
         }
+
         private double blockScale = 0.0025;
+
         public double BlockScale
         {
             get
@@ -42,6 +46,7 @@ namespace HeatSource
         }
 
         private double pipeLineScale = 1;
+
         public double PipeLineScale
         {
             set
@@ -55,7 +60,7 @@ namespace HeatSource
             }
         }
 
-        #endregion
+        #endregion UI Control
 
         private int provinceId = 0;
 
@@ -73,6 +78,7 @@ namespace HeatSource
         }
 
         private int activeTab = -1;
+
         public int ActiveTab
         {
             set
@@ -87,6 +93,7 @@ namespace HeatSource
         }
 
         private int cityId = 0;
+
         public int CityId
         {
             set
@@ -101,6 +108,7 @@ namespace HeatSource
         }
 
         private string cityName = "北京市";
+
         public string CityName
         {
             set
@@ -113,8 +121,10 @@ namespace HeatSource
                 return cityName;
             }
         }
+
         //地区类型
         private int locationType = 0;
+
         public int LocationType
         {
             set
@@ -144,8 +154,8 @@ namespace HeatSource
             }
         }
 
-
         private double indoorTemperature = 18;
+
         public double IndoorTemperature
         {
             get
@@ -173,8 +183,11 @@ namespace HeatSource
                 this.Save();
             }
         }
+
         private double outDoorTemp = -7.6;
-        public double OutDoorTemp {
+
+        public double OutDoorTemp
+        {
             get
             {
                 return outDoorTemp;
@@ -185,7 +198,9 @@ namespace HeatSource
                 Save();
             }
         }
+
         private double outAverTemp = -0.7;
+
         public double OutAverageTemp
         {
             get
@@ -198,9 +213,11 @@ namespace HeatSource
                 Save();
             }
         }
-        public double WaterTempDiff  { get; set; }
+
+        public double WaterTempDiff { get; set; }
 
         private double elecPrice = 0.5;
+
         public double ElecPrice
         {
             set
@@ -216,6 +233,7 @@ namespace HeatSource
 
         public double HeatValueofGas { set; get; }
         private double gasPrice = 2.5;
+
         public double GasPrice
         {
             get
@@ -230,6 +248,7 @@ namespace HeatSource
         }
 
         private double graphScale = 1;
+
         public double GraphScale
         {
             get
@@ -244,15 +263,18 @@ namespace HeatSource
         }
 
         private ObjectId rasterImageID = ObjectId.Null;
-        public ObjectId RasterImageID {
-            set { rasterImageID = value;  Save(); }
-            get { return rasterImageID; } }
-        public GlobalProperty(bool needId):base(needId)
-        { 
 
+        public ObjectId RasterImageID
+        {
+            set { rasterImageID = value; Save(); }
+            get { return rasterImageID; }
         }
 
-        public  void Initialize()
+        public GlobalProperty(bool needId) : base(needId)
+        {
+        }
+
+        public void Initialize()
         {
             ObjectId id = Utils.Utility.ContainLayer("our_outline_layer");
             if (id != ObjectId.Null)
@@ -278,7 +300,7 @@ namespace HeatSource
         protected override void GetAttributes()
         {
             attrs.Clear();
-            attrs.Add("CityId",CityId.ToString());
+            attrs.Add("CityId", CityId.ToString());
             attrs.Add("ProvinceId", ProvinceId.ToString());
             attrs.Add("IndoorTemperature", IndoorTemperature.ToString());
             attrs.Add("GraphScale", GraphScale.ToString());
@@ -288,7 +310,7 @@ namespace HeatSource
             attrs.Add("pipeLineScale", PipeLineScale.ToString());
             attrs.Add("elecprice", ElecPrice.ToString());
             attrs.Add("gasprice", GasPrice.ToString());
-            if(rasterImageID.IsNull == false)
+            if (rasterImageID.IsNull == false)
             {
                 attrs.Add("rasterImage", rasterImageID.Handle.ToString());
             }
@@ -296,7 +318,7 @@ namespace HeatSource
 
         protected override void _SetAttributes(Dictionary<string, string> attrs)
         {
-            if(attrs.ContainsKey("rasterImage"))
+            if (attrs.ContainsKey("rasterImage"))
             {
                 rasterImageID = Utility.GetObjectId(attrs["rasterImage"]);
             }
@@ -304,20 +326,20 @@ namespace HeatSource
             {
                 activeTab = int.Parse(attrs["ActiveTab"]);
             }
-            
-            if(attrs.ContainsKey("CityId"))
+
+            if (attrs.ContainsKey("CityId"))
             {
                 cityId = int.Parse(attrs["CityId"]);
             }
-            if(attrs.ContainsKey("ProvinceId"))
+            if (attrs.ContainsKey("ProvinceId"))
             {
                 provinceId = int.Parse(attrs["ProvinceId"]);
             }
-            if(attrs.ContainsKey("IndoorTemperature"))
+            if (attrs.ContainsKey("IndoorTemperature"))
             {
                 indoorTemperature = double.Parse(attrs["IndoorTemperature"]);
             }
-            if(attrs.ContainsKey("GraphScale"))
+            if (attrs.ContainsKey("GraphScale"))
             {
                 graphScale = int.Parse(attrs["GraphScale"]);
             }
@@ -325,19 +347,19 @@ namespace HeatSource
             {
                 buildingOutlineWidth = double.Parse(attrs["buildingwidth"]);
             }
-            if(attrs.ContainsKey("blockscale"))
+            if (attrs.ContainsKey("blockscale"))
             {
                 blockScale = double.Parse(attrs["blockscale"]);
             }
-            if(attrs.ContainsKey("pipeLineScale"))
+            if (attrs.ContainsKey("pipeLineScale"))
             {
                 pipeLineScale = double.Parse(attrs["pipeLineScale"]);
             }
-            if(attrs.ContainsKey("elecprice"))
+            if (attrs.ContainsKey("elecprice"))
             {
-               elecPrice = double.Parse(attrs["elecprice"]);
+                elecPrice = double.Parse(attrs["elecprice"]);
             }
-            if(attrs.ContainsKey("gasprice"))
+            if (attrs.ContainsKey("gasprice"))
             {
                 gasPrice = double.Parse(attrs["gasprice"]);
             }

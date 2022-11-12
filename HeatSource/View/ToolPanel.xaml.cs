@@ -14,7 +14,7 @@ using Autodesk.AutoCAD.Internal;
 using HeatSource.Utils.UseDrawJig;
 using System.Threading;
 using Autodesk.AutoCAD.Runtime;
-
+using System.IO;
 
 namespace HeatSource.View
 {
@@ -23,10 +23,12 @@ namespace HeatSource.View
     /// </summary>
     public partial class ToolPanel : UserControl
     {
-        static int currentSolutionIndex = -1;
+        private static int currentSolutionIndex = -1;
+
         //解决方案上一次使用的颜色
-        static List<int> currentColorIndex = new List<int>();
-        static List<Color> colors = new List<Autodesk.AutoCAD.Colors.Color>(){
+        private static List<int> currentColorIndex = new List<int>();
+
+        private static List<Color> colors = new List<Autodesk.AutoCAD.Colors.Color>(){
                 Color.FromRgb(255, 0, 0),
                 Color.FromRgb(255, 125, 0),
                 Color.FromRgb(255, 255, 0),
@@ -39,18 +41,20 @@ namespace HeatSource.View
                 Color.FromRgb(165, 234, 255),
                 Color.FromRgb(255, 220, 252)
         };
+
         //刚刚新建一个解决方案时，需要将所有变色的原素变回来
-        public static HashSet<ObjectId> changedEntityList = new HashSet<ObjectId>(); 
+        public static HashSet<ObjectId> changedEntityList = new HashSet<ObjectId>();
+
         //每个解决方案每个对象对应的颜色list
         public static List<Dictionary<ObjectId, Color>> solutionColorList = new List<Dictionary<ObjectId, Color>>();
+
         // current selected item is heatsource-substaion:1 or heatsource-building:2 substation-building:3
         public static int currentConnectedType = 0;
 
         public bool controlLoop = true;
 
-
-
-        public static void resetCurrentConnectedType(){
+        public static void resetCurrentConnectedType()
+        {
             currentConnectedType = 0;
         }
 
@@ -60,8 +64,10 @@ namespace HeatSource.View
         }
 
         //圈选后将圈选的信息保存
-        private static void  saveColorInfo(ObjectId objId,Color color){
-            if (currentSolutionIndex + 1 > solutionColorList.Count){
+        private static void saveColorInfo(ObjectId objId, Color color)
+        {
+            if (currentSolutionIndex + 1 > solutionColorList.Count)
+            {
                 solutionColorList.Add(new Dictionary<ObjectId, Color>());
             }
             Dictionary<ObjectId, Color> currDic = solutionColorList[currentSolutionIndex];
@@ -76,36 +82,40 @@ namespace HeatSource.View
         }
 
         //删除当前解决方案里颜色列表的某个对象
-        private static void deleteColorObjById(ObjectId objId) { 
+        private static void deleteColorObjById(ObjectId objId)
+        {
             Dictionary<ObjectId, Color> currDic = solutionColorList[currentSolutionIndex];
-            if (currDic.ContainsKey(objId)) {
+            if (currDic.ContainsKey(objId))
+            {
                 currDic.Remove(objId);
             }
         }
 
         //改变目前所在的解决方案
-        public static void changeSolution(int index) {
+        public static void changeSolution(int index)
+        {
             currentSolutionIndex = index;
             Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage("当前图层" + (index).ToString());
-            
+
             //同时需要更新当前对象的所有颜色
             updateColor();
         }
 
         //删除解决方案
-        public static void deleteSolution(int index ) {
+        public static void deleteSolution(int index)
+        {
             solutionColorList[index] = null;
             //如果后面有，切换解决方案颜色
-            if (index + 1 <= solutionColorList.Count-1) {
+            if (index + 1 <= solutionColorList.Count - 1)
+            {
                 changeSolution(index + 1);
-               
             }
             else if (index - 1 >= 0)
             {
                 changeSolution(index - 1);
-               
             }
-            else {
+            else
+            {
                 changeSolution(-1);
             }
         }
@@ -120,8 +130,7 @@ namespace HeatSource.View
             //将目前所有颜色都置为白色
             using (DocumentLock docLock = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.LockDocument())
             {
-               
-                for(int i = changedEntityList.Count-1;i >= 0;i--)
+                for (int i = changedEntityList.Count - 1; i >= 0; i--)
                 {
                     ObjectId oId = changedEntityList.ElementAt(i);
                     //此对象被删除了
@@ -129,7 +138,8 @@ namespace HeatSource.View
                     {
                         changedEntityList.Remove(oId);
                         //将每个图层的保存的键值对中将此线段删除
-                        foreach (Dictionary<ObjectId, Color> item in solutionColorList) {
+                        foreach (Dictionary<ObjectId, Color> item in solutionColorList)
+                        {
                             item.Remove(oId);
                         }
                     }
@@ -140,13 +150,11 @@ namespace HeatSource.View
                         ent.UpgradeOpen();
                         ent.Color = Color.FromRgb(255, 255, 255);
                     }
-
-
                 }
                 tr.Commit();
             }
             //
-            if (currentSolutionIndex + 1 > solutionColorList.Count )
+            if (currentSolutionIndex + 1 > solutionColorList.Count)
             {
                 solutionColorList.Add(new Dictionary<ObjectId, Color>());
 
@@ -156,7 +164,6 @@ namespace HeatSource.View
             tr = db.TransactionManager.StartTransaction();
             using (DocumentLock docLock = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.LockDocument())
             {
-
                 foreach (var item in currDic)
                 {
                     //检查此对象是否被删除
@@ -164,7 +171,8 @@ namespace HeatSource.View
                     currColor = item.Value;
                     //改变选中线段的颜色
                     Entity ent = (Entity)tr.GetObject(item.Key, OpenMode.ForRead);
-                    if (ent != null) {
+                    if (ent != null)
+                    {
                         ent.UpgradeOpen();
                         ent.Color = currColor;
                     }
@@ -173,32 +181,29 @@ namespace HeatSource.View
                         //此对象可以被删除了，因此要在记录中也删除相关对象
                         deleteColorObjById(item.Key);
                     }
-
                 }
                 tr.Commit();
             }
-            
         }
 
         //获取下一个颜色
         private static Color getNextColor()
         {
-            if(currentColorIndex == null)
+            if (currentColorIndex == null)
                 currentColorIndex = new List<int>();
-            if (currentColorIndex.Count < currentSolutionIndex+1)
+            if (currentColorIndex.Count < currentSolutionIndex + 1)
                 currentColorIndex.Add(-1);
             var index = currentColorIndex[currentSolutionIndex] + 1;
-            
-            if (index >= colors.Count) {
+
+            if (index >= colors.Count)
+            {
                 index = 0;
             }
             currentColorIndex[currentSolutionIndex] = index;
             return colors[index];
-
         }
 
         //生成block预览
-     
 
         //插入block
         public void Insertblock(string s, out bool status)
@@ -213,7 +218,7 @@ namespace HeatSource.View
             getPointOptions.AppendKeywordsToMessage = true;
             PromptPointResult getPointResult = ed.GetPoint(getPointOptions);
 
-            if(getPointResult.Status == PromptStatus.Cancel)
+            if (getPointResult.Status == PromptStatus.Cancel)
             {
                 status = true;
                 return;
@@ -234,11 +239,11 @@ namespace HeatSource.View
                 }
                 else if (s.CompareTo("换热机组") == 0)
                 {
-                        SubStation station = new SubStation(HeatSource.HeatSourceLayoutApp.currentSolution, true);
-                        station.BaseObjectId = blockid;
-                        station.Save();
-                        HeatSourceLayoutApp.currentSolution.SubStations.Add(blockid, station);
-                 }
+                    SubStation station = new SubStation(HeatSource.HeatSourceLayoutApp.currentSolution, true);
+                    station.BaseObjectId = blockid;
+                    station.Save();
+                    HeatSourceLayoutApp.currentSolution.SubStations.Add(blockid, station);
+                }
             }
         }
 
@@ -246,43 +251,49 @@ namespace HeatSource.View
         private void changeButtonBackground(Button btn, String imgSource)
         {
             System.Windows.Media.ImageBrush background = new System.Windows.Media.ImageBrush();
+            String fullPath = Path.GetFullPath(Path.Combine(HeatSourceLayoutApp.CurrentDirectory + @"\..\..\img\"));
+            string uriString = fullPath + imgSource + ".png";
 #if (DEBUG)
-            background.ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri(HeatSourceLayoutApp.CurrentDirectory + @"/../../img/"+imgSource+".png"));
+            background.ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri(uriString));
 #else
-            background.ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri(HeatSourceLayoutApp.CurrentDirectory +"/img/" + imgSource + ".png")); 
+            background.ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri(HeatSourceLayoutApp.CurrentDirectory +"/img/" + imgSource + ".png"));
 #endif
-            
+
             background.Stretch = System.Windows.Media.Stretch.Uniform;
-            btn.Background = background;        
+            btn.Background = background;
         }
 
         //改变按钮样式
-        public void changeBtnStyle(int index) {
+        public void changeBtnStyle(int index)
+        {
             //工具栏的所有btn
-            List<Button> toolBtn = new List<Button>();
-           //顺序不能变
-            toolBtn.Add(basePropertyBtn);
-            toolBtn.Add(drawBuildingBtn);
-            toolBtn.Add(drawRecBtn);
-            toolBtn.Add(drawPiplineBtn);
-            toolBtn.Add(addSourceBtn);
-            toolBtn.Add(addStationBtn);
-            toolBtn.Add(connectHSBtn);
-            toolBtn.Add(connectHBBtn);
-            toolBtn.Add(connectSBBtn);
-            toolBtn.Add(generateIntroBtn);
-            toolBtn.Add(drawPiplineBuildingBtn);
-            toolBtn.Add(importImageBtn);
-            toolBtn.Add(ajustPropBtn);
+            List<Button> toolBtn = new List<Button>
+            {
+                //顺序不能变
+                basePropertyBtn,
+                drawBuildingBtn,
+                drawRecBtn,
+                drawPiplineBtn,
+                addSourceBtn,
+                addStationBtn,
+                connectHSBtn,
+                connectHBBtn,
+                connectSBBtn,
+                generateIntroBtn,
+                drawPiplineBuildingBtn,
+                importImageBtn,
+                ajustPropBtn
+            };
 
-            foreach (Button btn in toolBtn) {
+            foreach (Button btn in toolBtn)
+            {
                 changeButtonBackground(btn, btn.Name.Substring(0, btn.Name.Length - 3));
             }
 
-
-            if (index != -1) {
+            if (index != -1)
+            {
                 var e = toolBtn[index];
-                changeButtonBackground((Button)myListView.FindName(e.Name.Substring(0, e.Name.Length - 3)+"Btn"), e.Name.Substring(0, e.Name.Length - 3) + "_select");
+                changeButtonBackground((Button)myListView.FindName(e.Name.Substring(0, e.Name.Length - 3) + "Btn"), e.Name.Substring(0, e.Name.Length - 3) + "_select");
             }
         }
 
@@ -306,14 +317,15 @@ namespace HeatSource.View
         }
 
         //获取圈选的楼房
-        public static  List<Building> getCircleBuildings() {
+        public static List<Building> getCircleBuildings()
+        {
             Document doc = Application.DocumentManager.MdiActiveDocument;
             Editor ed = doc.Editor;
             List<Building> buildings;
             if (currentSolutionIndex == -1)
             {
                 System.Windows.Forms.MessageBox.Show("请先新建解决方案!");
-                return null ;
+                return null;
             }
             try
             {
@@ -321,7 +333,7 @@ namespace HeatSource.View
                 TypedValue[] tvs = new TypedValue[] {
                     new TypedValue((int)DxfCode.Operator,"<and"),
                     new TypedValue((int)DxfCode.LayerName,"our_outline_layer"),
-                    new TypedValue((int)DxfCode.Operator,"and>")      
+                    new TypedValue((int)DxfCode.Operator,"and>")
                 };
                 SelectionFilter sf = new SelectionFilter(tvs);
                 //让用户进行圈画选择
@@ -340,7 +352,7 @@ namespace HeatSource.View
                     Database db = doc.Database;
                     Transaction tr = db.TransactionManager.StartTransaction();
 
-                    //获得所选的objectId的集合 
+                    //获得所选的objectId的集合
                     ObjectId[] objectIds = psr.Value.GetObjectIds();
 
                     ed.WriteMessage(">>>", psr.Value.Count);
@@ -362,7 +374,7 @@ namespace HeatSource.View
                             ent.Color = currColor;
                             //保存颜色信息
                             saveColorInfo(oId, currColor);
-                            //记录修改过的颜色的信息 
+                            //记录修改过的颜色的信息
                             changedEntityList.Add(oId);
                         }
                         //生成地区
@@ -384,19 +396,17 @@ namespace HeatSource.View
                 ed.WriteMessage("Exception" + exc.ToString());
                 return null;
             }
-      
         }
 
-        /*
-        * click events start
-        */
-
-        //折叠按钮
+        /// <summary>
+        /// 折叠按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void foldBtn_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            
             var width = HeatSource.HeatSourceLayoutApp.toolPaletteSet.PaletteSize.Width;
-           // System.Windows.MessageBox.Show(width + "");
+            // System.Windows.MessageBox.Show(width + "");
             if (width >= 165)
             {
                 return;
@@ -406,7 +416,6 @@ namespace HeatSource.View
             {
                 changewidth = 180;
                 changeButtonBackground(foldBtn, "left-arrow");
-
             }
             else
             {
@@ -423,6 +432,7 @@ namespace HeatSource.View
             string cmd = string.Format("hs_attr\n");
             doc.SendStringToExecute(cmd, true, false, false);
         }
+
         private void SaveImage(System.Drawing.Bitmap image)
         {
             System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -455,18 +465,19 @@ namespace HeatSource.View
                 changeBtnStyle(1);
             }
             Utility.SetOrthoMode(false);
-            while (true) {
+            while (true)
+            {
                 HeatSourceLayoutApp.solutionPanel.SelectOutLineLayer();
 
                 bool status = false;
                 ObjectId objId = Utils.MyPlineCmds.MyPolyJig(out status);
-                if(HeatSourceLayoutApp.CommandManager.Status())
+                if (HeatSourceLayoutApp.CommandManager.Status())
                 {
                     HeatSourceLayoutApp.CommandManager.ReleaseLock();
                     HeatSourceLayoutApp.CommandManager.TriggerCommand();
                     break;
                 }
-                if(status == false)
+                if (status == false)
                 {
                     //CommandManager.UnRegister();
                     HeatSourceLayoutApp.CommandManager.ReleaseLock();
@@ -478,17 +489,15 @@ namespace HeatSource.View
                     b.BaseObjectId = objId;
                     b.Save();
                     HeatSourceLayoutApp.buildings.Add(objId, b);
-                }     
+                }
             }
         }
-
 
         //矩形绘制按钮
         public void drawRectBtn_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-
             //CommandManager.Register();
-            if(!HeatSourceLayoutApp.CommandManager.RequireLock())
+            if (!HeatSourceLayoutApp.CommandManager.RequireLock())
             {
                 HeatSourceLayoutApp.CommandManager.AddCommand(CommandManager.ToolCommand.DrawBuildingRect);
                 Application.DocumentManager.MdiActiveDocument.SendStringToExecute("\x1B", true, false, false);
@@ -499,9 +508,9 @@ namespace HeatSource.View
             {
                 changeBtnStyle(2);
             }
-            Utility.SetOrthoMode(false);      
+            Utility.SetOrthoMode(false);
             HeatSourceLayoutApp.solutionPanel.SelectOutLineLayer();
-            using(DocumentLock docLock = Application.DocumentManager.MdiActiveDocument.LockDocument())
+            using (DocumentLock docLock = Application.DocumentManager.MdiActiveDocument.LockDocument())
             {
                 Database db = HostApplicationServices.WorkingDatabase;
                 Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
@@ -510,7 +519,7 @@ namespace HeatSource.View
                     PromptPointOptions optPoint = new PromptPointOptions
                         ("\n请指定矩形的一个角点");
                     PromptPointResult resPoint = ed.GetPoint(optPoint);
-                    if(HeatSourceLayoutApp.CommandManager.Status())
+                    if (HeatSourceLayoutApp.CommandManager.Status())
                     {
                         HeatSourceLayoutApp.CommandManager.ReleaseLock();
                         HeatSourceLayoutApp.CommandManager.TriggerCommand();
@@ -522,7 +531,6 @@ namespace HeatSource.View
                         return;
                     }
                     Point3d pt1 = resPoint.Value;
-                  
 
                     Polyline polyLine2 = new Polyline();
                     for (int i = 0; i < 4; i++)
@@ -589,7 +597,7 @@ namespace HeatSource.View
                             Utility.SetOrthoMode(false);
                             return;
                         }
-                        if(status)
+                        if (status)
                         {
                             HeatSourceLayoutApp.CommandManager.ReleaseLock();
                             Utility.SetOrthoMode(false);
@@ -605,7 +613,7 @@ namespace HeatSource.View
                     }
                 }
             }
-            
+
             //计算主管道长度的变化
             //HeatSourceLayoutApp.currentSolution.GetMainPipeLineLength();
         }
@@ -621,7 +629,7 @@ namespace HeatSource.View
             }
             else
             {
-               changeBtnStyle(10);
+                changeBtnStyle(10);
             }
 
             if (!HeatSourceLayoutApp.CommandManager.RequireLock())
@@ -672,7 +680,6 @@ namespace HeatSource.View
         //添加热源按钮
         public void addSourceBtn_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-
             if (!HeatSourceLayoutApp.CommandManager.RequireLock())
             {
                 HeatSourceLayoutApp.CommandManager.AddCommand(CommandManager.ToolCommand.DrawHeatProducer);
@@ -684,9 +691,9 @@ namespace HeatSource.View
             {
                 changeBtnStyle(4);
             }
-            
+
             //添加block
-           
+
             while (true)
             {
                 if (HeatSourceLayoutApp.currentSolution == null)
@@ -704,14 +711,12 @@ namespace HeatSource.View
                     return;
                 }
                 if (status)
-                {                   
+                {
                     HeatSourceLayoutApp.CommandManager.ReleaseLock();
                     return;
                 }
             }
-
         }
-
 
         //添加热力站按钮
         public void addStationBtn_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -726,9 +731,9 @@ namespace HeatSource.View
             {
                 changeBtnStyle(5);
             }
-           
+
             //添加block
-           
+
             while (true)
             {
                 if (HeatSourceLayoutApp.currentSolution == null)
@@ -756,7 +761,6 @@ namespace HeatSource.View
         //关联热力站－热源
         public void connectHSBtn_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-
             if (!HeatSourceLayoutApp.CommandManager.RequireLock())
             {
                 HeatSourceLayoutApp.CommandManager.AddCommand(CommandManager.ToolCommand.DrawHeatProducerSubStationCloud);
@@ -767,15 +771,14 @@ namespace HeatSource.View
             {
                 changeBtnStyle(6);
             }
-           
+
             currentConnectedType = 1;
             DrawCloudLine();
-          
         }
+
         //关联热源-楼房
         public void connectHBBtn_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            
             if (!HeatSourceLayoutApp.CommandManager.RequireLock())
             {
                 HeatSourceLayoutApp.CommandManager.AddCommand(CommandManager.ToolCommand.DrawHeatProducerBuildingCloud);
@@ -795,12 +798,11 @@ namespace HeatSource.View
             }
             currentConnectedType = 2;
             DrawCloudLine();
-
         }
+
         //关联热力站-楼房
         public void connectSBBtn_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-   
             if (!HeatSourceLayoutApp.CommandManager.RequireLock())
             {
                 HeatSourceLayoutApp.CommandManager.AddCommand(CommandManager.ToolCommand.DrawSubStationBuildingCloud);
@@ -820,12 +822,10 @@ namespace HeatSource.View
                 return;
             }
 
-
             currentConnectedType = 3;
             DrawCloudLine();
-
         }
-        
+
         //生成说明书按钮
         public void generateIntroBtn_Click(object sender, System.Windows.RoutedEventArgs e)
         {
@@ -879,7 +879,7 @@ namespace HeatSource.View
             HeatSourceLayoutApp.CommandManager.ReleaseLock();
             changeBtnStyle(-1);
         }
-        
+
         public static void DrawCloudLine()
         {
             Document doc = Application.DocumentManager.MdiActiveDocument;
@@ -894,6 +894,7 @@ namespace HeatSource.View
             cmd = string.Format("40\n");
             doc.SendStringToExecute(cmd, true, false, false);
         }
+
         //锅炉楼房数据关联的选择
         private void beganDataBindSelect()
         {
@@ -949,6 +950,5 @@ namespace HeatSource.View
             docLock.Dispose();
             return blockRefId;
         }
-
     }
 }

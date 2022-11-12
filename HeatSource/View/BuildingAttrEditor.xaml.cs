@@ -22,15 +22,17 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 
 namespace HeatSource.View
 {
-
+    /// <summary>
+    /// 楼房属性Page页
+    /// </summary>
     public partial class BuildingAttrEditor : Page
     {
-
         public BuildingAttrEditor()
         {
             InitializeComponent();
             SetBuilding(new Building(false));
         }
+
         public void SetBuilding(Building b)
         {
             var selectedObject = new BuildingAttributes();
@@ -43,15 +45,15 @@ namespace HeatSource.View
         {
             public BuildingAttrEditor buildingAttrEditor;
             private Building currentBuilding = null;
+
             public void SetCurrentBuilding(Building b, BuildingAttrEditor editor)
             {
                 this.currentBuilding = b;
                 buildingAttrEditor = editor;
-
             }
-           
+
             [Category(Constants.CATEGORY_UI)]
-            [DisplayName( "楼房轮廓调整")]
+            [DisplayName("楼房轮廓调整")]
             [Description("楼房轮廓宽度")]
             public double BuildingOutlineWidth
             {
@@ -61,10 +63,10 @@ namespace HeatSource.View
                 }
                 set
                 {
-                    if(HeatSourceLayoutApp.globalProperty.BuildingOutlineWidth != value && value > 0)
+                    if (HeatSourceLayoutApp.globalProperty.BuildingOutlineWidth != value && value > 0)
                     {
                         HeatSourceLayoutApp.globalProperty.BuildingOutlineWidth = value;
-                        foreach(var b in HeatSourceLayoutApp.buildings)
+                        foreach (var b in HeatSourceLayoutApp.buildings)
                         {
                             b.Value.UpdateOutlineWidth();
                         }
@@ -121,7 +123,6 @@ namespace HeatSource.View
                     this.currentBuilding.Area = value;
                     this.currentBuilding.Save();
                     this.buildingAttrEditor._propertyGrid.Update();
-
                 }
             }
 
@@ -207,7 +208,6 @@ namespace HeatSource.View
                 {
                     this.currentBuilding.HeatLoad = value;
                     this.currentBuilding.Save();
-
                 }
             }
 
@@ -225,9 +225,7 @@ namespace HeatSource.View
                 {
                     this.currentBuilding.YearHeat = value;
                     this.currentBuilding.Save();
-
                 }
-
             }
 
             public class BuildingTypeItemsSource : IItemsSource
@@ -242,6 +240,7 @@ namespace HeatSource.View
                     return sizes;
                 }
             }
+
             public class HeatStyleItemsSource : IItemsSource
             {
                 public Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ItemCollection GetValues()
@@ -254,6 +253,7 @@ namespace HeatSource.View
                     return sizes;
                 }
             }
+
             public class EnergySavingStyleItemsSource : IItemsSource
             {
                 public Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ItemCollection GetValues()

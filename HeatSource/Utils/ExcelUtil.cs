@@ -10,32 +10,37 @@ using System.Xml.XPath;
 
 namespace HeatSource.Utils
 {
-    class ExcelUtil
+    internal class ExcelUtil
     {
-
         #region 热源选型软件设备参数表相关函数
+
         private static Dictionary<string, List<Dictionary<string, string>>> ExcelFileDataCache = new Dictionary<string, List<Dictionary<string, string>>>();
 #if DEBUG
-        private static string Excel_folder = HeatSourceLayoutApp.CurrentDirectory + @"/../../Excels/热源选型软件设备参数表/";
-        private static string City_Excel_folder = HeatSourceLayoutApp.CurrentDirectory + @"/../../Excels/城市列表及相关热指标数据表/";
+
+        private static string Excel_folder = Path.GetFullPath(Path.Combine(HeatSourceLayoutApp.CurrentDirectory,
+            @"..\..\Excels/热源选型软件设备参数表\"));
+
+        private static string City_Excel_folder = Path.GetFullPath(Path.Combine(HeatSourceLayoutApp.CurrentDirectory,
+            @"..\..\Excels/城市列表及相关热指标数据表\"));
+
 #else
         private static string Excel_folder = HeatSourceLayoutApp.CurrentDirectory + @"/Excels/热源选型软件设备参数表/";
         private static string City_Excel_folder = HeatSourceLayoutApp.CurrentDirectory + @"/Excels/城市列表及相关热指标数据表/";
 #endif
+
         /// <summary>
         /// 读取特定热源选型软件设备参数
         /// </summary>
         /// <param name="filename">文件名，例如：总吨数700kw_台数1_间接_编号1.xlsx</param>
         /// <returns name="results">一个列表，每一项是Excel中的一行数据</returns>
-        static public List<Dictionary<string, string>> readSheet(string filename)
+        public static List<Dictionary<string, string>> readSheet(string filename)
         {
-            if(ExcelFileDataCache.ContainsKey(filename))
+            if (ExcelFileDataCache.ContainsKey(filename))
             {
                 return ExcelFileDataCache[filename];
             }
             filename = Excel_folder + filename;
             XDocument doc = XDocument.Load(filename.Replace("xlsx", "xml"));
-
 
             XNamespace ad = "urn:schemas-microsoft-com:office:spreadsheet";
 
@@ -84,9 +89,8 @@ namespace HeatSource.Utils
                 rowcount++;
             }
 
-            
             ExcelFileDataCache[filename] = results;
-            
+
             return results;
         }
 
@@ -94,7 +98,7 @@ namespace HeatSource.Utils
         /// 返回excel目录下所有xlsx文件的名字
         /// </summary>
         /// <returns></returns>
-        static public List<string> getExcelNamelist()
+        public static List<string> getExcelNamelist()
         {
             List<string> ExcelNames = new List<string>();
 
@@ -111,7 +115,8 @@ namespace HeatSource.Utils
 
             return ExcelNames;
         }
-        #endregion
+
+        #endregion 热源选型软件设备参数表相关函数
 
         #region 城市列表及城市的热指标数据
 
@@ -119,10 +124,9 @@ namespace HeatSource.Utils
         /// 返回城市列表
         /// </summary>
         /// <returns></returns>
-        static public List<List<string>> citylist()
+        public static List<List<string>> citylist()
         {
             XDocument doc = XDocument.Load(City_Excel_folder + "城市列表.xml");
-
 
             XNamespace ad = "urn:schemas-microsoft-com:office:spreadsheet";
 
@@ -142,7 +146,7 @@ namespace HeatSource.Utils
             return results;
         }
 
-        static public List<string> getSeverColdAreas()
+        public static List<string> getSeverColdAreas()
         {
             XDocument doc = XDocument.Load(City_Excel_folder + "严寒地区.xml");
 
@@ -158,7 +162,7 @@ namespace HeatSource.Utils
             return results;
         }
 
-        static public List<string> getColdAreas()
+        public static List<string> getColdAreas()
         {
             XDocument doc = XDocument.Load(City_Excel_folder + "寒冷地区.xml");
 
@@ -174,7 +178,7 @@ namespace HeatSource.Utils
             return results;
         }
 
-        static public List<string> getSummerHotWinterColdAreas()
+        public static List<string> getSummerHotWinterColdAreas()
         {
             XDocument doc = XDocument.Load(City_Excel_folder + "夏热冬冷地区.xml");
 
@@ -189,8 +193,7 @@ namespace HeatSource.Utils
             }
             return results;
         }
-        
 
-        #endregion
+        #endregion 城市列表及城市的热指标数据
     }
 }

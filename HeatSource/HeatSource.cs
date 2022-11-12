@@ -25,6 +25,7 @@ using System.Windows.Forms;
 using System.Text;
 using System.Security.Cryptography;
 using System.Globalization;
+using System.Reflection;
 
 [assembly: ExtensionApplication(typeof(HeatSource.HeatSourceLayoutApp))]
 
@@ -39,7 +40,6 @@ namespace HeatSource
     /// </summary>
     public class HeatSourceLayoutApp : IExtensionApplication
     {
-
         #region Global Data Structure
 
         /// <summary>
@@ -85,8 +85,7 @@ namespace HeatSource
         /// </summary>
         private static ProgressBarFunc progressbar = null;
 
-        #endregion
-
+        #endregion Global Data Structure
 
         public static Solution currentSolution
         {
@@ -98,6 +97,7 @@ namespace HeatSource
             }
             get { return _currentSolution; }
         }
+
         private static void initProgressBar()
         {
             progressbar = new ProgressBarFunc();
@@ -123,12 +123,12 @@ namespace HeatSource
                 progressbar.Visibility = System.Windows.Visibility.Collapsed;
         }
 
-
         public void Initialize()
         {
             try
             {
-                CurrentDirectory = System.IO.Directory.GetCurrentDirectory();
+                //CurrentDirectory = System.IO.Directory.GetCurrentDirectory();
+                CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 //bool verify = Verify();
                 //if (!verify)
                 //{
@@ -156,7 +156,7 @@ namespace HeatSource
                 Object obj = Application.GetSystemVariable("DBLCLKEDIT");
                 Application.SetSystemVariable("DBLCLKEDIT", 0);
             }
-            catch(System.Exception e)
+            catch (System.Exception e)
             {
                 Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage(e.Message);
             }
@@ -179,17 +179,16 @@ namespace HeatSource
                 byte[] originalData = Convert.FromBase64String(lines[0]);
                 byte[] signedData = Convert.FromBase64String(lines[1]);
 
-                // Create a new instance of the RSACryptoServiceProvider class 
+                // Create a new instance of the RSACryptoServiceProvider class
                 // and automatically create a new key-pair.
                 RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider();
 
-                // Verify the data and display the result to the 
+                // Verify the data and display the result to the
                 // console.
                 RSAalg.FromXmlString(publicKey);
                 RSAParameters Key1 = RSAalg.ExportParameters(false);
                 if (VerifySignedHash(originalData, signedData, Key1))
                 {
-
                     Console.WriteLine("The data was verified.");
                     DateTime t1 = DateTime.Now;
                     DateTimeFormatInfo dtFormat = new DateTimeFormatInfo();
@@ -207,23 +206,20 @@ namespace HeatSource
                     Console.WriteLine("The data does not match the signature.");
                     return false;
                 }
-
             }
             catch (System.Exception e)
             {
                 Console.WriteLine("The data was not signed or verified");
                 return false;
             }
-
-
         }
 
         public static byte[] HashAndSignBytes(byte[] DataToSign, RSAParameters Key)
         {
             try
             {
-                // Create a new instance of RSACryptoServiceProvider using the 
-                // key from RSAParameters.  
+                // Create a new instance of RSACryptoServiceProvider using the
+                // key from RSAParameters.
                 RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider();
 
                 RSAalg.ImportParameters(Key);
@@ -244,7 +240,7 @@ namespace HeatSource
         {
             try
             {
-                // Create a new instance of RSACryptoServiceProvider using the 
+                // Create a new instance of RSACryptoServiceProvider using the
                 // key from RSAParameters.
                 RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider();
 
@@ -253,7 +249,6 @@ namespace HeatSource
                 // Verify the data using the signature.  Pass a new instance of SHA1CryptoServiceProvider
                 // to specify the use of SHA1 for hashing.
                 return RSAalg.VerifyData(DataToVerify, new SHA1CryptoServiceProvider(), SignedData);
-
             }
             catch (CryptographicException e)
             {
@@ -262,7 +257,6 @@ namespace HeatSource
                 return false;
             }
         }
-
 
         public void BindEventListener()
         {
@@ -299,17 +293,18 @@ namespace HeatSource
             Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage("view changed\n");
         }
 
-        void layoutSwitched(object sender, LayoutSwitchedEventArgs e)
+        private void layoutSwitched(object sender, LayoutSwitchedEventArgs e)
         {
             Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage("图层切换完毕\n");
             //lisa
         }
-        void activedocument(object o, DocumentCollectionEventArgs e)
+
+        private void activedocument(object o, DocumentCollectionEventArgs e)
         {
             restore();
         }
 
-        void toBeDeActivated(object o, DocumentCollectionEventArgs e)
+        private void toBeDeActivated(object o, DocumentCollectionEventArgs e)
         {
             if (currentSolution == null)
             {
@@ -344,7 +339,6 @@ namespace HeatSource
                 }
                 else if (sln == null)
                 {
-
                 }
                 else if (sln.HeatProducers.Keys.Contains(oId))
                 {
@@ -383,9 +377,9 @@ namespace HeatSource
                     return;
                 }
                 HeatSourceLayoutApp.CommandManager.ReleaseLock();
-
             }
         }
+
         private void OnCommandEnd(object sender, CommandEventArgs e)
         {
             if (e.GlobalCommandName.CompareTo("REVCLOUD") == 0)
@@ -431,14 +425,12 @@ namespace HeatSource
                     {
                         System.Windows.MessageBox.Show(err.Message);
                         district.RemoveSelf();
-
                     }
                     currentSolution.Districts.Add(district.BaseObjectId, district);
                     //MessageBox.Show("in");
                     ToolPanel.DrawCloudLine();
                 }
             }
-
         }
 
         public void loadConfigData()
@@ -450,7 +442,6 @@ namespace HeatSource
 
             ed.WriteMessage("Current Version: " + DataConfig.getCurrentVersion());
             ed.WriteMessage("Finish loading config data\n");
-
         }
 
         private void closeRibbon()
@@ -462,6 +453,7 @@ namespace HeatSource
 
         public void Terminate()
         {
+            //TODO MdiActiveDocument为什么可能是null
             Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
             Application.DocumentManager.MdiActiveDocument.CommandEnded -= new CommandEventHandler(this.OnCommandEnd);
         }
@@ -480,7 +472,7 @@ namespace HeatSource
         //test
 
         [CommandMethod("SCREENSHOT")]
-        static public bool createScreen()
+        public static bool createScreen()
         {
             ProgressMeter pm = new ProgressMeter();
             pm.Start("正在生成说明书...");
@@ -498,7 +490,7 @@ namespace HeatSource
         }
 
         //截图每个解决方案
-        static public bool createScreenShot(ProgressMeter pm)
+        public static bool createScreenShot(ProgressMeter pm)
         {
             var doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null) return false;
@@ -549,7 +541,8 @@ namespace HeatSource
                 Application.DocumentManager.MdiActiveDocument.Editor.Regen();
                 //创建截图目录
                 var dir = HeatSourceLayoutApp.CurrentDirectory + "\\tmp\\";
-                if (!Directory.Exists(dir)) {
+                if (!Directory.Exists(dir))
+                {
                     Directory.CreateDirectory(dir);
                 }
 
@@ -622,18 +615,23 @@ namespace HeatSource
                     case "bmp":
                         imf = System.Drawing.Imaging.ImageFormat.Bmp;
                         break;
+
                     case "gif":
                         imf = System.Drawing.Imaging.ImageFormat.Gif;
                         break;
+
                     case "jpg":
                         imf = System.Drawing.Imaging.ImageFormat.Jpeg;
                         break;
+
                     case "tif":
                         imf = System.Drawing.Imaging.ImageFormat.Tiff;
                         break;
+
                     case "wmf":
                         imf = System.Drawing.Imaging.ImageFormat.Wmf;
                         break;
+
                     default:
                         imf = System.Drawing.Imaging.ImageFormat.Png;
                         break;
@@ -813,21 +811,20 @@ namespace HeatSource
                         return;
                     }
                 }
-
             }
-
         }
-        
+
         [CommandMethod("insertmap")]
         public static void InsertMap()
         {
             ObjectId imageId = Utility.addStaticGoogleMap();
             //pick scale
-            if(imageId != ObjectId.Null)
+            if (imageId != ObjectId.Null)
             {
                 globalProperty.RasterImageID = imageId;
             }
         }
+
         [CommandMethod("rescale")]
         public static void rescale()
         {
@@ -862,6 +859,7 @@ namespace HeatSource
         }
 
         public static bool isReStoring = false;
+
         [CommandMethod("restore")]
         public void restore()
         {
@@ -953,7 +951,6 @@ namespace HeatSource
                                             var b = new SubStation();
                                             b.ResetAttributes(pairs, objectid);
                                         }
-
                                         else if (type.CompareTo(PipeLine.modelType) == 0)
                                         {
                                             var b = new PipeLine();
@@ -974,7 +971,6 @@ namespace HeatSource
                 }
                 using (Transaction trans2 = db.TransactionManager.StartTransaction())
                 {
-
                     //然后遍历所有的管道结头
                     DBDictionary groups = trans2.GetObject(db.GroupDictionaryId, OpenMode.ForRead) as DBDictionary;
                     foreach (DBDictionaryEntry entry in groups)
@@ -998,7 +994,6 @@ namespace HeatSource
                             }
                         }
                         // }
-
                     }
                     trans2.Dispose();
                 }

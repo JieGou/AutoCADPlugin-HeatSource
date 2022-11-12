@@ -20,7 +20,7 @@ using HeatSource.Formula;
 namespace HeatSource.View
 {
     /// <summary>
-    /// Interaction logic for SubstationAttrEditor.xaml
+    /// 热力站属性Page页
     /// </summary>
     public partial class SubstationAttrEditor : Page
     {
@@ -32,9 +32,8 @@ namespace HeatSource.View
 
         public void SetSubstation(SubStation substation)
         {
-           
             var selectedObject = new SubstationAttributes();
-            selectedObject.SetSubstation(substation,this);
+            selectedObject.SetSubstation(substation, this);
             this.DataContext = selectedObject;
             _propertyGrid.Update();
         }
@@ -53,7 +52,6 @@ namespace HeatSource.View
             [Category(Constants.CATEGORY_UI)]
             [DisplayName("热源显示大小")]
             [Description("热源显示大小")]
-
             public double HeatProducerSize
             {
                 get
@@ -207,7 +205,6 @@ namespace HeatSource.View
                 {
                     return this.currentSubStation.WaterPumpCount;
                 }
-                
             }
 
             [Category(Constants.CATEGORY_FORMULA)]
@@ -220,7 +217,6 @@ namespace HeatSource.View
                 get
                 {
                     return Math.Round(this.currentSubStation.WaterPumpVolume, 2);
-
                 }
             }
 
@@ -264,7 +260,7 @@ namespace HeatSource.View
             {
                 get
                 {
-                    return Math.Round(this.currentSubStation.TotalHeatingDesignLoad,2);
+                    return Math.Round(this.currentSubStation.TotalHeatingDesignLoad, 2);
                 }
             }
 
@@ -290,7 +286,7 @@ namespace HeatSource.View
             {
                 get
                 {
-                    return 2*Math.Round(this.currentSubStation.TotoalPipeLength, 2);
+                    return 2 * Math.Round(this.currentSubStation.TotoalPipeLength, 2);
                 }
             }
 
@@ -304,10 +300,8 @@ namespace HeatSource.View
                 {
                     return currentSubStation.WaterPumpTemp;
                 }
-                
             }
         }
-
 
         public class HeatStyleItemsSource : IItemsSource
         {

@@ -19,17 +19,19 @@ using System.Windows.Shapes;
 namespace HeatSource.View
 {
     /// <summary>
-    /// Interaction logic for SolutionAttrPanel.xaml
+    /// 方案属性Page页
     /// </summary>
     public partial class SolutionAttrPanel : Page
     {
         private SolutionAttrTable solutionTable;
+
         public SolutionAttrPanel()
         {
             InitializeComponent();
             solutionTable = new SolutionAttrTable(HeatSourceLayoutApp.currentSolution);
             _propertyGrid.SelectedObject = solutionTable;
         }
+
         public void SetSolution(Solution s)
         {
             solutionTable = new SolutionAttrTable(HeatSourceLayoutApp.currentSolution);

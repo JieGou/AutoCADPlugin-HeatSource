@@ -24,12 +24,13 @@ using System.Collections;
 namespace HeatSource.View
 {
     /// <summary>
-    /// Interaction logic for BaseAttrEditor.xaml
+    /// 基础属性Page页
     /// </summary>
     public partial class BaseAttrEditor : Page
     {
         public static Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ItemCollection viewCities = new Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ItemCollection();
-        BaseAttributes selectedObject;
+        private BaseAttributes selectedObject;
+
         public BaseAttrEditor()
         {
             InitializeComponent();
@@ -83,8 +84,8 @@ namespace HeatSource.View
 
         public class BaseAttributes
         {
-
             public BaseAttrEditor baseAttrEditor;
+
             public void SetCurrentBase(BaseAttrEditor editor)
             {
                 baseAttrEditor = editor;
@@ -127,7 +128,7 @@ namespace HeatSource.View
                     {
                         HeatSourceLayoutApp.globalProperty.OutAverageTemp = double.Parse(DataConfig.getDailyTemperatureLessthanFiveAverageTemperature(index));
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         e.ToString();
                     }
@@ -163,9 +164,9 @@ namespace HeatSource.View
                     }
 
                     baseAttrEditor._propertyGrid.Update();
-
                 }
             }
+
             [Category(Constants.CATEGORY_INPUT)]
             [DisplayName("地区类型")]
             [Description("该建筑区域所在的地区类型")]
@@ -180,12 +181,8 @@ namespace HeatSource.View
                 set
                 {
                     HeatSourceLayoutApp.globalProperty.LocationType = value;
-
                 }
             }
-
-        
-
 
             [Category(Constants.CATEGORY_INPUT)]
             [DisplayName("室内温度(℃)")]
@@ -231,6 +228,7 @@ namespace HeatSource.View
                     HeatSourceLayoutApp.globalProperty.PipeLineScale = value;
                 }
             }
+
             [Category(Constants.CATEGORY_UI)]
             [DisplayName("楼房轮廓调整")]
             [Description("楼房轮廓宽度")]
@@ -283,7 +281,6 @@ namespace HeatSource.View
                 }
             }
 
-
             [Category(Constants.CATEGORY_DATABASE)]
             [ReadOnly(true)]
             [DisplayName("燃气热值(MJ/m3)")]
@@ -312,11 +309,8 @@ namespace HeatSource.View
                 }
                 set
                 {
-
                     HeatSourceLayoutApp.globalProperty.HeatingDays = value;
                 }
-
-
             }
 
             [Category(Constants.CATEGORY_INPUT)]
@@ -377,12 +371,10 @@ namespace HeatSource.View
                 }
                 set
                 {
-
                     HeatSourceLayoutApp.globalProperty.OutAverageTemp = value;
                 }
             }
         }
-
 
         public class ProvinceItemsSource : IItemsSource
         {
@@ -396,6 +388,7 @@ namespace HeatSource.View
                 return sizes;
             }
         }
+
         public class CityItemsSource : IItemsSource
         {
             public Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ItemCollection GetValues()
@@ -408,6 +401,7 @@ namespace HeatSource.View
                 return BaseAttrEditor.viewCities;
             }
         }
+
         public class LocationItemsSource : IItemsSource
         {
             public Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ItemCollection GetValues()

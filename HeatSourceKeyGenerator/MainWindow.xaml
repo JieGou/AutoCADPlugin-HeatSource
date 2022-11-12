@@ -1,13 +1,24 @@
-﻿<Window x:Class="HeatSourceKeyGenerator.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:HeatSourceKeyGenerator"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+﻿<Window
+    x:Class="HeatSourceKeyGenerator.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HeatSourceKeyGenerator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="MainWindow"
+    Width="525"
+    Height="350"
+    mc:Ignorable="d">
     <Grid>
-        <Button x:Name="button" Content="生成" HorizontalAlignment="Left" Margin="230,140,0,0" VerticalAlignment="Top" Width="93" Height="46" RenderTransformOrigin="-0.208,-0.004" Click="button_Click"/>
-
+        <Button
+            x:Name="button"
+            Width="93"
+            Height="46"
+            Margin="230,140,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Click="button_Click"
+            Content="生成"
+            RenderTransformOrigin="-0.208,-0.004" />
     </Grid>
 </Window>

@@ -46,7 +46,7 @@ namespace HeatSourceKeyGenerator
                 byte[] originalData = ByteConverter.GetBytes(dataString);
                 byte[] signedData;
 
-                // Create a new instance of the RSACryptoServiceProvider class 
+                // Create a new instance of the RSACryptoServiceProvider class
                 // and automatically create a new key-pair.
                 RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider();
 
@@ -75,7 +75,7 @@ namespace HeatSourceKeyGenerator
                     }
                 }
 
-                // Verify the data and display the result to the 
+                // Verify the data and display the result to the
                 // console.
                 RSAalg.FromXmlString(publicKey);
                 RSAParameters Key1 = RSAalg.ExportParameters(false);
@@ -88,7 +88,6 @@ namespace HeatSourceKeyGenerator
                 {
                     Console.WriteLine("The data does not match the signature.");
                 }
-
             }
             catch (ArgumentNullException)
             {
@@ -100,8 +99,8 @@ namespace HeatSourceKeyGenerator
         {
             try
             {
-                // Create a new instance of RSACryptoServiceProvider using the 
-                // key from RSAParameters.  
+                // Create a new instance of RSACryptoServiceProvider using the
+                // key from RSAParameters.
                 RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider();
 
                 RSAalg.ImportParameters(Key);
@@ -122,7 +121,7 @@ namespace HeatSourceKeyGenerator
         {
             try
             {
-                // Create a new instance of RSACryptoServiceProvider using the 
+                // Create a new instance of RSACryptoServiceProvider using the
                 // key from RSAParameters.
                 RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider();
 
@@ -131,7 +130,6 @@ namespace HeatSourceKeyGenerator
                 // Verify the data using the signature.  Pass a new instance of SHA1CryptoServiceProvider
                 // to specify the use of SHA1 for hashing.
                 return RSAalg.VerifyData(DataToVerify, new SHA1CryptoServiceProvider(), SignedData);
-
             }
             catch (CryptographicException e)
             {

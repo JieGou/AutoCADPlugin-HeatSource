@@ -25,14 +25,17 @@ using HeatSource.Utils;
 namespace HeatSource.View
 {
     /// <summary>
-    /// Interaction logic for HeatProducerAttrEditor.xaml
+    /// 热源属性Page页
     /// </summary>
     public partial class HeatProducerAttrEditor : Page
     {
-        public static Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ItemCollection viewBoilers = new Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ItemCollection();
+        public static Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ItemCollection viewBoilers
+            = new Xceed.Wpf.Toolkit.PropertyGrid.Attributes.ItemCollection();
+
         public static Dictionary<string, List<Dictionary<string, string>>> boilersSolution = null;
 
-        HeatProducerAttributes selectedObject;
+        private HeatProducerAttributes selectedObject;
+
         public HeatProducerAttrEditor()
         {
             InitializeComponent();
@@ -52,16 +55,16 @@ namespace HeatSource.View
         {
             public HeatProducerAttrEditor heatProducerAttrEditor;
             private HeatProducer currentProducer = null;
+
             public void SetHeatProducer(HeatProducer p, HeatProducerAttrEditor editor)
             {
                 this.currentProducer = p;
                 heatProducerAttrEditor = editor;
-
             }
+
             [Category(Constants.CATEGORY_UI)]
             [DisplayName("热源显示大小")]
             [Description("热源显示大小")]
-
             public double HeatProducerSize
             {
                 get
@@ -118,7 +121,7 @@ namespace HeatSource.View
                             currentProducer.SupplyWaterTemp = 75;
                             currentProducer.ReturnWaterTemp = 55;
                         }
-                        else if(value == 4)
+                        else if (value == 4)
                         {
                             currentProducer.SupplyWaterTemp = 120;
                             currentProducer.ReturnWaterTemp = 90;
@@ -129,8 +132,6 @@ namespace HeatSource.View
                     this.heatProducerAttrEditor._propertyGrid.Update();
                 }
             }
-
-          
 
             [Category(Constants.CATEGORY_INPUT)]
             [DisplayName("锅炉配选(台)")]
@@ -247,7 +248,6 @@ namespace HeatSource.View
                 }
             }
 
-            
             [Category(Constants.CATEGORY_FORMULA)]
             [ReadOnly(true)]
             [DisplayName("热源总负荷(kW)")]
@@ -320,7 +320,6 @@ namespace HeatSource.View
 
                         return total;
                     }
-
                 }
             }
 
@@ -361,9 +360,9 @@ namespace HeatSource.View
                 get
                 {
                     return Math.Round(this.currentProducer.MasterPipeLength, 2);
-
                 }
             }
+
             [Category(Constants.CATEGORY_FORMULA)]
             [ReadOnly(true)]
             [DisplayName("管道总长度(m)")]
@@ -373,9 +372,10 @@ namespace HeatSource.View
             {
                 get
                 {
-                    return 2*Math.Round(this.currentProducer.TotoalPipeLength, 2);
+                    return 2 * Math.Round(this.currentProducer.TotoalPipeLength, 2);
                 }
             }
+
             [Category(Constants.CATEGORY_FORMULA)]
             [ReadOnly(true)]
             [DisplayName("水泵全年运行能耗(kWh)")]
@@ -388,6 +388,7 @@ namespace HeatSource.View
                     return Math.Round(this.currentProducer.totalWaterPumpEnergyConsumption, 2);
                 }
             }
+
             [Category(Constants.CATEGORY_FORMULA)]
             [ReadOnly(true)]
             [DisplayName("水泵流量(m3)")]
@@ -398,9 +399,9 @@ namespace HeatSource.View
                 get
                 {
                     return Math.Round(this.currentProducer.WaterPumpVolume, 2);
-
                 }
             }
+
             [Category(Constants.CATEGORY_FORMULA)]
             [ReadOnly(true)]
             [DisplayName("水泵扬程(m)")]
@@ -437,6 +438,7 @@ namespace HeatSource.View
         }
 
         #region 读取Excel表格得到锅炉选配方案
+
         public static Dictionary<string, List<Dictionary<string, string>>> getBoilersSolution(string totalheat, string connect)
         {
             Dictionary<string, List<Dictionary<string, string>>> results = new Dictionary<string, List<Dictionary<string, string>>>();
@@ -462,6 +464,7 @@ namespace HeatSource.View
             }
             return results;
         }
-        #endregion
+
+        #endregion 读取Excel表格得到锅炉选配方案
     }
 }

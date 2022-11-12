@@ -19,17 +19,19 @@ using System.Windows.Shapes;
 namespace HeatSource.View
 {
     /// <summary>
-    /// Interaction logic for SolutionAttrPanel.xaml
+    /// 方案对比Page页
     /// </summary>
     public partial class SolutionAttrComparePanel : Page
     {
         private SolutionAttrCompareTable solutionCompareTable;
+
         public SolutionAttrComparePanel()
         {
             InitializeComponent();
             solutionCompareTable = new SolutionAttrCompareTable();
             _propertyGrid.SelectedObject = solutionCompareTable;
         }
+
         public void SetSolution()
         {
             solutionCompareTable = new SolutionAttrCompareTable();

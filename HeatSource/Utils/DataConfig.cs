@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Xml;
 using System.Collections;
+using System.IO;
 
 namespace HeatSource.Utils
 {
-    class DataConfig
+    internal class DataConfig
     {
 #if DEBUG
-        public static string CONFIG_PATH = HeatSourceLayoutApp.CurrentDirectory + @"/../../Config/";
+        public static string CONFIG_PATH = Path.GetFullPath(Path.Combine(HeatSourceLayoutApp.CurrentDirectory, @"\..\..\Config\"));
 #else
         public static string CONFIG_PATH = HeatSourceLayoutApp.CurrentDirectory + @"/Config/";
 #endif
@@ -16,19 +17,21 @@ namespace HeatSource.Utils
         public static void init_config_path()
         {
 #if DEBUG
-        CONFIG_PATH = HeatSourceLayoutApp.CurrentDirectory + @"/../../Config/";
+            CONFIG_PATH = Path.GetFullPath(Path.Combine(HeatSourceLayoutApp.CurrentDirectory + @"\..\..\Config\"));
 #else
         CONFIG_PATH = HeatSourceLayoutApp.CurrentDirectory + @"/Config/";
 #endif
-    }
-    public static void loadData()
+        }
+
+        public static void loadData()
         {
             loadCurrentVersion();
             loadGB50736_2012();
             loadCustomConfig();
         }
 
-#region Config Version
+        #region Config Version
+
         private static String current_version;
 
         public static void loadCurrentVersion()
@@ -46,12 +49,15 @@ namespace HeatSource.Utils
             current_version = version;
             return 1;
         }
-#endregion
 
-#region Config GB50736_2012
-        //Usage: map[cityname_attributename] = data, 
-        //ex. City_attribute_map["北京_年平均温度"] = 12.3 
+        #endregion Config Version
+
+        #region Config GB50736_2012
+
+        //Usage: map[cityname_attributename] = data,
+        //ex. City_attribute_map["北京_年平均温度"] = 12.3
         private static Dictionary<String, String> City_attribute_map = new Dictionary<String, String>();
+
         private static String[] city_list;
         private static String[] attribute_list;
 
@@ -88,7 +94,6 @@ namespace HeatSource.Utils
             return City_attribute_map[city + "_" + attrtype];
         }
 
-
         //以下为特定城市属性的接口
 
         //冬季供暖温度（供暖室外计算温度）
@@ -100,9 +105,9 @@ namespace HeatSource.Utils
         public static int getCityIndexFromCityName(string name)
         {
             int index = 0;
-            foreach(var item in city_list)
+            foreach (var item in city_list)
             {
-                if(item.CompareTo(name) == 0 || item.StartsWith(name) || name.StartsWith(item))
+                if (item.CompareTo(name) == 0 || item.StartsWith(name) || name.StartsWith(item))
                 {
                     return index;
                 }
@@ -122,9 +127,11 @@ namespace HeatSource.Utils
         {
             return getConfigValue(city_list[cityindex], "平均温度5期间内的平均温度");
         }
-#endregion
 
-#region Config Custom
+        #endregion Config GB50736_2012
+
+        #region Config Custom
+
         //Usage: 自定义配置属性，其配置文件为Config目录下的Custom_data.xml
         //      Custom _data包括列表和keyvalue两种自定义形式，具体可参考现有的Custom_data.xml
         private static XmlDocument custom_config_doc = new XmlDocument();
@@ -219,7 +226,6 @@ namespace HeatSource.Utils
             return str_result[index]; ;
         }
 
-
         //节能措施
         public static String[] getCustomEnergytypeList()
         {
@@ -234,6 +240,7 @@ namespace HeatSource.Utils
             String[] str_result = (String[])ar_result.ToArray(typeof(String));
             return str_result[index]; ;
         }
-#endregion
+
+        #endregion Config Custom
     }
 }
